@@ -1,9 +1,9 @@
 use crate::config::stage::Stage;
 
-use super::config_model::{AdventurersSecret, Database, DotEnnyConfig, Server};
+use super::config_model::{AdventurersSecret, Database, DotEnvyConfig, Server};
 use anyhow::Result;
 
-pub fn load() -> Result<DotEnnyConfig> {
+pub fn load() -> Result<DotEnvyConfig> {
     dotenvy::dotenv().ok();
 
     let server = Server {
@@ -24,7 +24,7 @@ pub fn load() -> Result<DotEnnyConfig> {
             .parse()?,
     };
 
-    Ok(DotEnnyConfig { server, database })
+    Ok(DotEnvyConfig { server, database })
 }
 
 pub fn get_stage() -> Stage {

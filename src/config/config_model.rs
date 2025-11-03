@@ -1,5 +1,5 @@
 #[derive(Debug, Clone)]
-pub struct DotEnnyConfig {
+pub struct DotEnvyConfig {
     pub server: Server,
     pub database: Database,
 }
