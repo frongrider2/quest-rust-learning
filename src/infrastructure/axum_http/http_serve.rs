@@ -2,7 +2,10 @@ use std::{net::SocketAddr, sync::Arc, time::Duration};
 
 use crate::{
     config::config_model::DotEnvyConfig,
-    infrastructure::{axum_http::default_routers, postgres::postgres_connection::PgPoolSquad},
+    infrastructure::{
+        axum_http::{default_routers, routers},
+        postgres::postgres_connection::PgPoolSquad,
+    },
 };
 
 use anyhow::Result;
@@ -19,6 +22,34 @@ use tracing::info;
 pub async fn start(config: Arc<DotEnvyConfig>, db_pool: Arc<PgPoolSquad>) -> Result<()> {
     let app = Router::new()
         .fallback(default_routers::not_found)
+        .nest(
+            "/journey-ledger",
+            routers::journey_ledger::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/quest-ops",
+            routers::quest_ops::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/crew-switchboard",
+            routers::crew_swithboard::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/guild-commanders",
+            routers::guild_commanders::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/adventurers",
+            routers::adventures::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/quest-viewing",
+            routers::quest_viewing::routes(Arc::clone(&db_pool)),
+        )
+        .nest(
+            "/authentication",
+            routers::authentication::routes(Arc::clone(&db_pool)),
+        )
         .route("/health-check", get(default_routers::health_check))
         .layer(TimeoutLayer::new(Duration::from_secs(
             config.server.timeout,
@@ -46,7 +77,9 @@ pub async fn start(config: Arc<DotEnvyConfig>, db_pool: Arc<PgPoolSquad>) -> Res
 
     info!("Server is running on port {}", config.server.port);
 
-    axum::serve(listener, app).with_graceful_shutdown(shutdown_signal()).await?;
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal())
+        .await?;
 
     Ok(())
 }

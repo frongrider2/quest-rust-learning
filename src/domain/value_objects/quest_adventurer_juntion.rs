@@ -6,6 +6,8 @@ use crate::{
     infrastructure::postgres::schema::quest_adventurer_junction,
 };
 
+pub const MAX_ADVENTURERS_PER_QUEST: i64 = 4;
+
 // Associations link table join
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable, Queryable, Associations)]
 #[diesel(belongs_to(AdventurerEntity,foreign_key = adventurer_id))]

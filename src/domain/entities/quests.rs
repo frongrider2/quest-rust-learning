@@ -9,6 +9,7 @@ use crate::{
 // สำหรับ query
 #[derive(Debug, Clone, Identifiable, Selectable, Queryable)]
 #[diesel(table_name = quests)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct QuestEntity {
     pub id: i32,
     pub name: String,
@@ -17,6 +18,7 @@ pub struct QuestEntity {
     pub guild_commander_id: i32,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    // pub deleted_at: Option<NaiveDateTime>,
 }
 
 impl QuestEntity {

@@ -4,3 +4,7 @@ diesel migration generate init_database;
 <!-- up -->
 diesel migration run
 diesel migration redo
+
+<!-- test -->
+cargo install cargo-tarpaulin
+cargo tarpaulin --out xml
